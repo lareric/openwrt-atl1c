@@ -124,6 +124,12 @@ jobs:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
+    - name: Upload Kernel Configs
+      uses: actions/upload-artifact@v2
+      with:
+        name: Kernel Configs
+        path: openwrt/build_dir/target-*/linux-*/.config
+
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
@@ -131,8 +137,9 @@ jobs:
         cd openwrt/bin/targets/*/*
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo $PWD
         cd -
-        cp openwrt/build_dir/target*/*/*/.config ${{ env.FIRMWARE }}/config
+        cp openwrt/build_dir/target*/*/.config  openwrt/bin/targets/*/*/config
         echo "::set-output name=status::success"
 
     - name: Upload firmware directory
