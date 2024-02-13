@@ -128,11 +128,10 @@ jobs:
       run: | 
         df -hT
         echo $PWD
-        find  / -name .config
+        find -name .config
         cd openwrt
         echo $PWD
-        find  / -name .config
-        find  -name .config
+        find -name .config
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
