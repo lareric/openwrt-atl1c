@@ -101,9 +101,9 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
 
     - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          path: 
+          path: | 
             openwrt/build_dir
             openwrt/dl
           key: ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
