@@ -144,7 +144,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Kernel Configs
-        path: openwrt/build_dir/target-*/linux-*/.config
         path: |
           openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx_cortexa7/linux-5.15.148/.config 
           openwrt/build_dir/target-*/linux-*/linux-*/.config
