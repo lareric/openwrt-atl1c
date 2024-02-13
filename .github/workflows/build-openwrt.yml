@@ -100,18 +100,6 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-    - name: Cache Gradle packages
-      uses: actions/cache@v3
-      with:
-        path: | 
-          openwrt/build_dir
-          openwrt/dl
-        key: ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
-        restore-keys: |
-          ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
-          ${{ runner.os }}-openwrt-
-          ${{ runner.os }}-
-
     - name: Compile the firmware
       id: compile
       run: |
@@ -133,6 +121,18 @@ jobs:
         echo $PWD
         find  / -name .config
         find  -name .config
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: | 
+          openwrt/build_dir
+          openwrt/dl
+        key: ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
+        restore-keys: |
+          ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
+          ${{ runner.os }}-openwrt-
+          ${{ runner.os }}-
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
