@@ -107,6 +107,10 @@ jobs:
           openwrt/build_dir
           openwrt/dl
         key: ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
+        restore-keys: |
+          ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
+          ${{ runner.os }}-openwrt-
+          ${{ runner.os }}-
 
     - name: Compile the firmware
       id: compile
