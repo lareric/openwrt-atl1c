@@ -121,7 +121,7 @@ jobs:
 
     - name: Check space usage
       if: (!cancelled())
-      run: 
+      run: | 
         df -hT
         find -name .config
 
