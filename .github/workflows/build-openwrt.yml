@@ -127,7 +127,12 @@ jobs:
       if: (!cancelled())
       run: | 
         df -hT
-        find -name .config
+        echo $PWD
+        find  / -name .config
+        cd openwrt
+        echo $PWD
+        find  / -name .config
+        find  -name .config
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
@@ -151,7 +156,6 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo $PWD
         cd -
-        cp openwrt/build_dir/target*/*/.config  openwrt/bin/targets/*/*/config
         echo "::set-output name=status::success"
 
     - name: Upload firmware directory
