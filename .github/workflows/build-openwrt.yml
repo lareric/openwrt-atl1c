@@ -43,18 +43,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Cache
-      uses: actions/cache@v3
-      with:
-        path: | 
-          openwrt/build_dir
-          openwrt/dl
-        key: ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
-        restore-keys: |
-          ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
-          ${{ runner.os }}-openwrt-
-          ${{ runner.os }}-
-
     - name: Initialization environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -112,8 +100,22 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
+    - name: Cache
+      uses: actions/cache@v3
+      with:
+        path: | 
+          openwrt/build_dir
+          openwrt/dl
+        key: ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
+        restore-keys: |
+          ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
+          ${{ runner.os }}-openwrt-
+          ${{ runner.os }}-
+
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
+      with:
+        detached: true
 
     - name: Compile the firmware
       id: compile
