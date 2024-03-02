@@ -104,8 +104,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: | 
-          openwrt/build_dir
-          openwrt/dl
+          /workdir/openwrt/build_dir
+          /workdir/openwrt/dl
         key: ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
         restore-keys: |
           ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
