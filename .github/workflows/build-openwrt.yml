@@ -114,8 +114,6 @@ jobs:
 
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
-      with:
-        detached: true
 
     - name: Compile the firmware
       id: compile
