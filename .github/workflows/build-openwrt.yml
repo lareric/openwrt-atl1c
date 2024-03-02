@@ -60,8 +60,11 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
 
     - name: Load custom feeds
       run: |
@@ -111,11 +114,6 @@ jobs:
           ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
           ${{ runner.os }}-openwrt-
           ${{ runner.os }}-
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        detached: true
 
     - name: Compile the firmware
       id: compile
