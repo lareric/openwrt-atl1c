@@ -22,8 +22,9 @@ on:
         default: 'false'
 
 env:
-  REPO_URL: https://github.com/lareric/openwrt-test.git
-  REPO_BRANCH: mdev
+  #REPO_URL: https://github.com/lareric/openwrt-test.git
+  REPO_URL: https://github.com/nxp-imx/imx_openwrt
+  REPO_BRANCH: imx_v23.05_v5.15.114
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
