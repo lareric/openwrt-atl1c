@@ -24,7 +24,8 @@ on:
 env:
   #REPO_URL: https://github.com/lareric/openwrt-test.git
   REPO_URL: https://github.com/nxp-imx/imx_openwrt
-  REPO_BRANCH: imx_v23.05_v5.15.114
+  #REPO_BRANCH: imx_v23.05_v5.15.114
+  REPO_BRANCH: v22.03.3
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -64,8 +65,8 @@ jobs:
         git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    #- name: Setup tmate session
+    #  uses: mxschmitt/action-tmate@v3
 
     - name: Load custom feeds
       run: |
