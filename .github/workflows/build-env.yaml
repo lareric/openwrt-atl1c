@@ -11,8 +11,6 @@
 name: env OpenWrt
 
 on:
-  push:
-
   repository_dispatch:
   workflow_dispatch:
     inputs:
@@ -61,7 +59,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL openwrt
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
@@ -92,9 +90,6 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-
     - name: Cache
       uses: actions/cache@v3
       with:
@@ -106,6 +101,9 @@ jobs:
           ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
           ${{ runner.os }}-openwrt-
           ${{ runner.os }}-
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
 
     - name: Download package
       id: package
@@ -133,6 +131,8 @@ jobs:
         df -hT
         echo $PWD
         find -name .config
+        find -name config*.gz
+        find -name config_data.gz
         cd openwrt
         echo $PWD
         find -name .config
@@ -144,12 +144,19 @@ jobs:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: openwrt/bin
 
+    - name: Upload Kernel 
+      uses: actions/upload-artifact@v2
+      with:
+        name: Kernel
+        path: |
+          openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx_cortexa7/linux-*/zImage
+          openwrt/build_dir/target-*/linux-*/linux-*/.config
+
     - name: Upload Kernel Configs
       uses: actions/upload-artifact@v2
       with:
         name: Kernel Configs
         path: |
-          openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx_cortexa7/linux-5.15.148/.config 
           openwrt/build_dir/target-*/linux-*/linux-*/.config
 
     - name: Organize files
@@ -157,7 +164,6 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo $PWD
         cd -
@@ -208,17 +214,6 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
-
-    - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 3
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
