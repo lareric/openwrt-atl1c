@@ -22,10 +22,11 @@ on:
         default: 'false'
 
 env:
-  #REPO_URL: https://github.com/lareric/openwrt-test.git
-  REPO_URL: https://github.com/nxp-imx/imx_openwrt
+  REPO_URL: https://github.com/lareric/openwrt-test.git
+  #REPO_URL: https://github.com/nxp-imx/imx_openwrt
   #REPO_BRANCH: imx_v23.05_v5.15.114
-  REPO_BRANCH: v22.03.3
+  #REPO_BRANCH: v22.03.3
+  REPO_BRANCH: imx
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -97,15 +98,6 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: Download package
-      id: package
-      run: |
-        cd openwrt
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
-
     - name: Cache
       uses: actions/cache@v3
       with:
@@ -117,6 +109,15 @@ jobs:
           ${{ runner.os }}-openwrt-${{ hashFiles('feeds.conf') }}
           ${{ runner.os }}-openwrt-
           ${{ runner.os }}-
+          
+    - name: Download package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
       id: compile
@@ -151,8 +152,14 @@ jobs:
       with:
         name: Kernel Configs
         path: |
-          openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx_cortexa7/linux-5.15.148/.config 
-          openwrt/build_dir/target-*/linux-*/linux-*/.config
+          openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx_cortexa7/linux-5.15*/kernel/config_data.gz
+
+    - name: Upload Kernel
+      uses: actions/upload-artifact@v2
+      with:
+        name: Kernel Configs
+        path: |
+          openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx_cortexa7/zImage
 
     - name: Organize files
       id: organize
