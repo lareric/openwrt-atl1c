@@ -149,14 +149,14 @@ jobs:
         path: openwrt/bin
 
     - name: Upload Kernel Configs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@main
       with:
         name: Kernel Configs
         path: |
           openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx_cortexa7/linux-5.15*/kernel/config_data.gz
 
     - name: Upload Kernel
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@main
       with:
         name: Kernel Configs
         path: |
