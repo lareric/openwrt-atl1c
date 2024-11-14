@@ -172,7 +172,7 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo $PWD
         cd -
-		echo "status=success" >> $GITHUB_OUTPUT
+        echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
